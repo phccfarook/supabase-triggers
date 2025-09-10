@@ -20,5 +20,5 @@ jobs:
             -H 'Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}' \
             -H 'Content-Type: application/json' \
             -d '{
-              "prompt": "Explain what a Supabase Edge Function is in two sentences."
+              "prompt": "Explain Quadrate Tech Solutions (quadrate.lk) main services in bullet points"
             }'

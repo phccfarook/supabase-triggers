@@ -1,13 +1,9 @@
-# .github/workflows/daily_api_call.yml
+# .github/workflows/manual_api_call.yml
 
-name: Call Supabase Function Daily
+name: Manual Supabase Function Call
 
 on:
-  # This schedule triggers the workflow at 8:00 AM UTC every day.
-  schedule:
-    - cron: '0 8 * * *'
-  
-  # This line allows you to manually run the workflow from the Actions tab on GitHub.
+  # This allows you to manually run the workflow from the Actions tab on GitHub.
   workflow_dispatch:
 
 jobs:

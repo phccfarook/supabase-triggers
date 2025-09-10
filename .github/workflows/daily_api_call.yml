@@ -1,5 +1,4 @@
 # .github/workflows/scheduled_random_api_call.yml
-
 name: Scheduled Random Supabase Function Call
 
 on:
@@ -14,12 +13,6 @@ jobs:
   call-api-job:
     runs-on: ubuntu-latest
     steps:
-      # FIX: Add this step to install an updated version of jq
-      - name: Install latest jq
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
-
       - name: Call Supabase Edge Function with a Random Query
         env:
           PROMPTS_JSON: |
@@ -31,10 +24,16 @@ jobs:
               "Provide an overview of recent projects completed by Quadrate Tech Solutions (quadrate.lk)."
             ]
         run: |
-          # This command will now work because we installed a newer jq version
-          RANDOM_PROMPT=$(echo "${PROMPTS_JSON}" | jq -r '.[random * length | floor]')
+          # Get the length of the array
+          ARRAY_LENGTH=$(echo "${PROMPTS_JSON}" | jq 'length')
           
-          echo "Selected Prompt: $RANDOM_PROMPT"
+          # Generate random index using bash $RANDOM variable
+          RANDOM_INDEX=$(($RANDOM % $ARRAY_LENGTH))
+          
+          # Select the prompt at the random index
+          RANDOM_PROMPT=$(echo "${PROMPTS_JSON}" | jq -r ".[$RANDOM_INDEX]")
+          
+          echo "Selected Prompt (index $RANDOM_INDEX): $RANDOM_PROMPT"
           
           # Construct the JSON payload using the selected prompt
           JSON_PAYLOAD=$(jq -n --arg prompt "$RANDOM_PROMPT" '{prompt: $prompt}')

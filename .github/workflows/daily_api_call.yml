@@ -1,20 +1,41 @@
-# .github/workflows/manual_api_call.yml
+# .github/workflows/scheduled_random_api_call.yml
 
-name: Manual Supabase Function Call
+name: Scheduled Random Supabase Function Call
 
 on:
-  # This allows you to manually run the workflow from the Actions tab on GitHub.
+  # This schedule triggers the workflow every 4 hours.
+  schedule:
+    - cron: '0 */4 * * *'
+  
+  # This allows you to manually run the workflow for testing purposes.
   workflow_dispatch:
 
 jobs:
   call-api-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Call Supabase Edge Function via cURL
+      - name: Call Supabase Edge Function with a Random Query
+        env:
+          # Storing prompts in an environment variable for cleaner access
+          PROMPTS_JSON: |
+            [
+              "What are the core business areas of Quadrate Tech Solutions (quadrate.lk)?",
+              "List the key technology stacks used by Quadrate Tech Solutions (quadrate.lk).",
+              "Summarize the main products and services offered by Quadrate Tech Solutions (quadrate.lk).",
+              "Who are the primary target customers for Quadrate Tech Solutions (quadrate.lk)?",
+              "Provide an overview of recent projects completed by Quadrate Tech Solutions (quadrate.lk)."
+            ]
         run: |
+          # Read the prompts from the environment variable and pick one at random using jq
+          RANDOM_PROMPT=$(echo "${PROMPTS_JSON}" | jq -r '. | .[random() * length | floor]')
+          
+          echo "Selected Prompt: $RANDOM_PROMPT"
+          
+          # Construct the JSON payload using the selected prompt
+          JSON_PAYLOAD=$(jq -n --arg prompt "$RANDOM_PROMPT" '{prompt: $prompt}')
+          
+          # Make the API call
           curl -L -X POST 'https://npwbxlvcfrawolebzawn.supabase.co/functions/v1/quadrate-contact' \
-            -H 'Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}' \
-            -H 'Content-Type: application/json' \
-            -d '{
-              "prompt": "Explain Quadrate Tech Solutions (quadrate.lk) main services in bullet points"
-            }'
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "$JSON_PAYLOAD"

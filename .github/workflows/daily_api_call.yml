@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Call Supabase Edge Function via cURL
         run: |
-          curl -L -X POST 'https://npwbxlvcfrawolebzawn.supabase.co/functions/v1/quadrate-ai-proxy' \
+          curl -L -X POST 'https://npwbxlvcfrawolebzawn.supabase.co/functions/v1/quadrate-contact' \
             -H 'Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}' \
             -H 'Content-Type: application/json' \
             -d '{

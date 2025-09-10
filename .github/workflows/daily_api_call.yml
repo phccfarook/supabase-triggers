@@ -1,22 +1,5 @@
-# .github/workflows/scheduled_random_api_call.yml
-
-name: Scheduled Random Supabase Function Call
-
-on:
-  # This schedule triggers the workflow every 4 hours.
-  schedule:
-    - cron: '0 */4 * * *'
-  
-  # This allows you to manually run the workflow for testing purposes.
-  workflow_dispatch:
-
-jobs:
-  call-api-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Call Supabase Edge Function with a Random Query
+- name: Call Supabase Edge Function with a Random Query
         env:
-          # Storing prompts in an environment variable for cleaner access
           PROMPTS_JSON: |
             [
               "What are the core business areas of Quadrate Tech Solutions (quadrate.lk)?",
@@ -26,8 +9,9 @@ jobs:
               "Provide an overview of recent projects completed by Quadrate Tech Solutions (quadrate.lk)."
             ]
         run: |
-          # Read the prompts from the environment variable and pick one at random using jq
-          RANDOM_PROMPT=$(echo "${PROMPTS_JSON}" | jq -r '. | .[random() * length | floor]')
+          # Read the prompts and pick one at random using jq.
+          # The fix is changing "random()" to "random".
+          RANDOM_PROMPT=$(echo "${PROMPTS_JSON}" | jq -r '.[random * length | floor]')
           
           echo "Selected Prompt: $RANDOM_PROMPT"
           

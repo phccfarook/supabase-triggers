@@ -1,5 +1,5 @@
 # .github/workflows/scheduled_random_api_call.yml
-name: Scheduled Random Supabase Function Call
+name: Every 4 hour 
 
 on:
   # This schedule triggers the workflow every 4 hours.

@@ -1,0 +1,17 @@
+# .github/workflows/daily_cleanup.yml
+name: Daily Supabase Cleanup
+on:
+  # Run once per day at 02:00 UTC
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup old Gemini responses
+        run: |
+          curl -L -X POST 'https://npwbxlvcfrawolebzawn.supabase.co/functions/v1/cleanup-old-responses' \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json"
